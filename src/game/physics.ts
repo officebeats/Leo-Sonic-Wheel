@@ -340,6 +340,9 @@ export function updateGameState(gs: GameState, input: InputState): void {
     } else if (gs.vx < 0) {
       gs.vx = Math.min(0, gs.vx + fric);
     }
+    if (Math.abs(gs.vx) < 0.01) {
+      gs.vx = 0;
+    }
   }
   gs.vx = Math.max(-maxSpeed, Math.min(maxSpeed, gs.vx));
 

@@ -106,10 +106,7 @@ export function GameScreen({ levelId, onExit, onNextLevel }: Props) {
 
   const handleNext = () => {
     if (levelId < 10) {
-      stopGameLoop(gameRef.current!);
       onNextLevel(levelId + 1);
-      // re-init with new level
-      setTimeout(() => startLevel(), 50);
     } else {
       onExit();
     }
