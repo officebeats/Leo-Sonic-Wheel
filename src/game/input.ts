@@ -75,6 +75,12 @@ export function triggerPause() {
 
 // ── Lifecycle ────────────────────────────────────────────────────────────
 export function initInput() {
+  state.left = false;
+  state.right = false;
+  state.jump = false;
+  state.jumpPressed = false;
+  state.pause = false;
+  prevJump = false;
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
 }
