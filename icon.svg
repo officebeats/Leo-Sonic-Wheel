@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#0B1A2A"/>
+  <circle cx="96" cy="110" r="40" fill="none" stroke="#B0BEC5" stroke-width="6"/>
+  <line x1="96" y1="70" x2="96" y2="110" stroke="#B0BEC5" stroke-width="3"/>
+  <line x1="96" y1="110" x2="136" y2="110" stroke="#B0BEC5" stroke-width="3"/>
+  <line x1="96" y1="110" x2="96" y2="150" stroke="#B0BEC5" stroke-width="3"/>
+  <line x1="96" y1="110" x2="56" y2="110" stroke="#B0BEC5" stroke-width="3"/>
+  <ellipse cx="96" cy="90" rx="22" ry="18" fill="#2980E8"/>
+  <ellipse cx="98" cy="93" rx="7" ry="9" fill="#F5DEB3"/>
+  <circle cx="108" cy="84" r="5" fill="white"/>
+  <circle cx="109" cy="84" r="2.5" fill="#111"/>
+  <polygon points="78,78 68,80 78,84" fill="#1A5FBF"/>
+  <polygon points="78,84 68,86 78,90" fill="#1A5FBF"/>
+  <polygon points="78,90 68,92 78,96" fill="#1A5FBF"/>
+  <text x="96" y="172" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="20" fill="#F1C40F">LEO</text>
+</svg>
