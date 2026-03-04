@@ -1,3 +1,5 @@
+import type { GameState } from "./physics";
+import { TileType } from "./levelLoader";
 import {
   TILE_SIZE,
   CANVAS_WIDTH,
@@ -49,7 +51,6 @@ const GATE_OPEN = "#2ECC7140";
 const MARBLE_COLOR = "#7F8C8D";
 const PLATFORM_COLOR = "#8E6C4A";
 
-const BOOST_GLOW = "#00E5FF";
 const WIND_COLOR = "#AED6F177";
 
 // ─── Renderer ────────────────────────────────────────────────────────────
