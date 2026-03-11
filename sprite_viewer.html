@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head><style>
+  body { background: #333; color: white; margin: 0; padding: 20px; font-family: sans-serif; }
+  .viewer { position: relative; display: inline-block; background: magenta; }
+  img { display: block; }
+  .grid {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+      linear-gradient(to right, rgba(0,255,0,0.5) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,255,0,0.5) 1px, transparent 1px);
+    background-size: 50px 50px; /* Assuming 50x50 approx frame sizes. We will tweak */
+    pointer-events: none;
+  }
+  .ruler-x, .ruler-y { position: absolute; font-size: 10px; color: #0f0; }
+</style></head>
+<body>
+  <h2>Sprite Viewer: shadow_sheet.png</h2>
+  <div class="viewer">
+    <img src="shadow_sheet.png" id="img">
+    <canvas id="grid" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+  </div>
+  <script>
+    const img = document.getElementById('img');
+    const canvas = document.getElementById('grid');
+    const ctx = canvas.getContext('2d');
+
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.strokeStyle = 'rgba(0,255,0,0.3)';
+      
+      // We know from previous code:
+      // Run animation was around sx=0, sy=100, sw=45, sh=50
+      
+      const frameW = 50;
+      const frameH = 50;
+      
+      for(let y=0; y<img.height; y+=frameH) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(img.width, y); ctx.stroke();
+        ctx.fillStyle = '#0f0'; ctx.fillText(y, 2, y + 10);
+      }
+      for(let x=0; x<img.width; x+=frameW) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, img.height); ctx.stroke();
+        ctx.fillStyle = '#0f0'; ctx.fillText(x, x + 2, 10);
+      }
+    };
+  </script>
+</body>
+</html>
