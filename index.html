@@ -173,7 +173,6 @@ tz.addEventListener('pointerdown',e=>{ e.preventDefault(); jump(); });
 tz.addEventListener('touchstart',e=>{ e.preventDefault(); jump(); });
 
 // Sonic ring sound via Web Audio API
-const aCtx=new (window.AudioContext||window.webkitAudioContext)();
 function playRing(){
   const t=aCtx.currentTime;
   const o1=aCtx.createOscillator(),o2=aCtx.createOscillator();
