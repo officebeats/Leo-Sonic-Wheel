@@ -56,6 +56,18 @@ const cv=document.getElementById('game'),cx=cv.getContext('2d',{alpha:false});
 let W=960,H=600,WR=58,G=0.39;
 const dpr=window.devicePixelRatio||1;
 
+// Global State
+let fc=0,scX=0,spd=0,dist=0,dead=false,shk=0,rngs=0;
+let st=0; // 0=start, 1=play, 2=dead
+let wA=0; // wheel angle
+let wY=0,wVY=0,onGnd=false; // wheel physics
+let sY=0,sVY=0,inWheel=true; // Shadow physics
+let runFr=0; // run animation frame
+let WX=W*0.2; // wheel screen X (dynamic)
+let dtX=0,dtY=0,dtVY=0,dtVX=0,dtR=0; // death tumble vars
+let sqT=0; // squash stretch timer
+let bestDist=localStorage.getItem('ls_best')||0;
+
 function resize(){
   const w=window.innerWidth,h=window.innerHeight;
   cv.width=w*dpr;cv.height=h*dpr;
@@ -83,14 +95,6 @@ const RR={y:130,h:46},RJ={y:502,h:38},RD={y:189,h:44};
 let rF=[],jF=[],dF=[],sL=false,pS=null;
 function xF(d,w,ry,rh,mx=12){const r=d.data,f=[];let s=-1;for(let x=0;x<w;x++){let h=false;for(let y=0;y<rh;y++){if(r[((ry+y)*w+x)*4+3]>20){h=true;break}}if(h&&s===-1)s=x;else if(!h&&s!==-1){if(x-s>=4)f.push({x:s,w:x-s});s=-1}}if(s!==-1&&w-s>8)f.push({x:s,w:w-s});return f.length>mx?f.slice(0,mx):f}
 sI.onload=()=>{const w=sI.width,h=sI.height,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(sI,0,0);const d=x.getImageData(0,0,w,h);for(let i=0;i<d.data.length;i+=4){if(d.data[i]>=240&&d.data[i+1]>=240&&d.data[i+2]>=240)d.data[i+3]=0}x.putImageData(d,0,0);pS=c;rF=xF(d,w,RR.y,RR.h,16);jF=xF(d,w,RJ.y,RJ.h,8);dF=xF(d,w,RD.y,RD.h,12);sL=true};
-
-// State
-let fc=0,scX=0,spd=0,dist=0,dead=false,shk=0,rngs=0;
-let wA=0; // wheel angle
-let wY=0,wVY=0,onGnd=false; // wheel physics
-let sY=0,sVY=0,inWheel=true; // Shadow physics
-let runFr=0; // run animation frame
-let WX=W*0.2; // wheel screen X (dynamic)
 
 function playProceduralSound(type) {
   if (aCtx.state === 'suspended') aCtx.resume();
@@ -132,10 +136,6 @@ function playProceduralSound(type) {
 }
 
 let blds=[],pts=[],rOs=[],bgM=[],bgF=[],mls=[],wTrl=[];
-let bestDist=localStorage.getItem('ls_best')||0;
-let st=0; // 0=start, 1=play, 2=dead
-let dtX=0,dtY=0,dtVY=0,dtVX=0,dtR=0; // death tumble vars
-let sqT=0; // squash stretch timer
 
 // No hardcoded frame arrays needed, using xF results.
 
