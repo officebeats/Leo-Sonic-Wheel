@@ -22,7 +22,7 @@
     .st{font-family:'Press Start 2P',cursive;font-size:clamp(10px, 3vw, 14px);color:rgba(255,255,255,0.6);letter-spacing:0.1em}
     .ht{font-size:13px;font-weight:700;letter-spacing:0.4em;color:rgba(255,255,255,0.5);text-transform:uppercase;animation:pu 2s infinite;margin-top:20px}
     @keyframes pu{0%,100%{opacity:0.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-5px)}}
-    #touch-zone{position:fixed;inset:0;z-index:200}
+    #touch-zone{position:fixed;inset:0;z-index:400}
     .mobile-controls{position:fixed;bottom:30px;right:30px;width:80px;height:80px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.2);border-radius:50%;display:none;align-items:center;justify-content:center;pointer-events:none;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);z-index:150}
     .mobile-controls::after{content:'JUMP';font-size:10px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,0.5)}
     @media(max-width:768px){.mobile-controls{display:flex}#title-brand{display:none}.hud-top{padding-top:10px}.gc{padding:8px 12px}}
@@ -145,9 +145,10 @@ function init(nState=0){
 function mkBg(lx,z,s){return{x:lx+Math.random()*80,w:90+Math.random()*240,y:H-200-Math.random()*320,s:s+Math.random()*18,z}}
 
 function jump(){
-  if(st===0) { init(1); return; }
-  if(st===2 && dtY > H+100) { init(1); return; }
+  if(st===0) { init(1); if(AC.state==='suspended') AC.resume(); return; }
+  if(st===2 && dtY > H+50) { init(1); if(AC.state==='suspended') AC.resume(); return; }
   if(st!==1) return;
+  if(AC.state==='suspended') AC.resume();
   if(inWheel && onGnd){
     wVY=-7.2-(spd*0.045); 
     sVY=-10.2-(spd*0.1); 
@@ -159,7 +160,10 @@ function jump(){
 
 // Input
 window.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='ArrowUp'||e.code==='KeyW'){e.preventDefault();jump()}});
-document.getElementById('touch-zone').addEventListener('pointerdown',e=>{e.preventDefault();jump()});
+document.getElementById('touch-zone').addEventListener('pointerdown',e=>{
+  e.preventDefault();
+  jump();
+}, { passive: false });
 
 // Sonic ring sound via Web Audio API
 const aCtx=new (window.AudioContext||window.webkitAudioContext)();
