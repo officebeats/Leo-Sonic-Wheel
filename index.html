@@ -15,14 +15,14 @@
     .sl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.3em;color:rgba(255,255,255,0.4)}
     .sv{font-family:'Press Start 2P',cursive;font-size:clamp(16px, 5vw, 24px);color:#fff;transition:transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28);transform-origin:left center}
     #title-brand{font-weight:900;font-size:12px;letter-spacing:0.8em;color:rgba(255,255,255,0.1);text-transform:uppercase;position:fixed;top:40px;left:50%;transform:translateX(-50%);z-index:90}
-    #game-over,#start-scr{position:fixed;inset:0;background:rgba(0,0,0,0.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:300;gap:20px;text-align:center}
+    #game-over,#start-scr{position:fixed;inset:0;background:rgba(0,0,0,0.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:300;gap:20px;text-align:center;pointer-events:none}
     #game-over.show,#start-scr.show{display:flex;animation:fi 0.6s cubic-bezier(0.23, 1, 0.32, 1)}
     @keyframes fi{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
     .at{font-family:'Press Start 2P',cursive;font-size:clamp(24px, 8vw, 42px);color:#ff3030;text-shadow:4px 4px 0 rgba(255,48,48,0.2)}
     .st{font-family:'Press Start 2P',cursive;font-size:clamp(10px, 3vw, 14px);color:rgba(255,255,255,0.6);letter-spacing:0.1em}
     .ht{font-size:13px;font-weight:700;letter-spacing:0.4em;color:rgba(255,255,255,0.5);text-transform:uppercase;animation:pu 2s infinite;margin-top:20px}
     @keyframes pu{0%,100%{opacity:0.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-5px)}}
-    #touch-zone{position:fixed;inset:0;z-index:400}
+    #touch-zone{position:fixed;inset:0;z-index:400;pointer-events:auto;touch-action:none}
     .mobile-controls{position:fixed;bottom:30px;right:30px;width:80px;height:80px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.2);border-radius:50%;display:none;align-items:center;justify-content:center;pointer-events:none;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);z-index:150}
     .mobile-controls::after{content:'JUMP';font-size:10px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,0.5)}
     @media(max-width:768px){.mobile-controls{display:flex}#title-brand{display:none}.hud-top{padding:10px;gap:8px}.gc{padding:10px 14px;border-left-width:5px}}
@@ -92,14 +92,12 @@ let sY=0,sVY=0,inWheel=true; // Shadow physics
 let runFr=0; // run animation frame
 let WX=W*0.2; // wheel screen X (dynamic)
 
-// --- AUDIO SYSTEM (Web Audio API) ---
-const AC = new (window.AudioContext || window.webkitAudioContext)();
 function playProceduralSound(type) {
-  if (AC.state === 'suspended') AC.resume();
-  const osc = AC.createOscillator();
-  const gn = AC.createGain();
+  if (aCtx.state === 'suspended') aCtx.resume();
+  const osc = aCtx.createOscillator();
+  const gn = aCtx.createGain();
   osc.connect(gn);
-  gn.connect(AC.destination);
+  gn.connect(aCtx.destination);
 
   const t = AC.currentTime;
   if (type === 'jump') {
@@ -155,10 +153,10 @@ function init(nState=0){
 function mkBg(lx,z,s){return{x:lx+Math.random()*80,w:90+Math.random()*240,y:H-200-Math.random()*320,s:s+Math.random()*18,z}}
 
 function jump(){
-  if(st===0) { init(1); if(AC.state==='suspended') AC.resume(); return; }
-  if(st===2 && dtY > H+50) { init(1); if(AC.state==='suspended') AC.resume(); return; }
+  if(st===0) { init(1); if(aCtx.state==='suspended') aCtx.resume(); return; }
+  if(st===2 && dtY > H+50) { init(1); if(aCtx.state==='suspended') aCtx.resume(); return; }
   if(st!==1) return;
-  if(AC.state==='suspended') AC.resume();
+  if(aCtx.state==='suspended') aCtx.resume();
   if(inWheel && onGnd){
     wVY=-7.2-(spd*0.045); 
     sVY=-10.2-(spd*0.1); 
@@ -169,11 +167,9 @@ function jump(){
 }
 
 // Input
-window.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='ArrowUp'||e.code==='KeyW'){e.preventDefault();jump()}});
-document.getElementById('touch-zone').addEventListener('pointerdown',e=>{
-  e.preventDefault();
-  jump();
-}, { passive: false });
+const tz = document.getElementById('touch-zone');
+tz.addEventListener('pointerdown',e=>{ e.preventDefault(); jump(); });
+tz.addEventListener('touchstart',e=>{ e.preventDefault(); jump(); });
 
 // Sonic ring sound via Web Audio API
 const aCtx=new (window.AudioContext||window.webkitAudioContext)();
